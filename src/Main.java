@@ -19,7 +19,6 @@ public class Main {
                 if (line.contains("=")) {
 
                     String[] parts = line.split("=", 2);
-
                     env.put(parts[0], parts[1]);
                 }
             }
@@ -36,22 +35,19 @@ public class Main {
 
         System.out.println("=== DEMO LỘ API KEY ===");
 
-        // THỰC HÀNH KHÔNG AN TOÀN
         String hardcodedKey = "sk_live_SECRET_123456";
 
-        System.out.println("\n[!] API Key bị hardcode:");//(mã cứng)
+        System.out.println("\n[!] API Key bị hardcode:");
         System.out.println(hardcodedKey);
 
-        // THỰC HÀNH AN TOÀN
         Map<String, String> env = loadEnv(".env");
 
         String secureKey = env.get("API_KEY");
 
-        System.out.println("\n[+] API Key an toan tu file .env:");
+        System.out.println("\n[+] API Key an toàn từ file .env:");
         System.out.println(secureKey);
 
-        // CHẠY SCANNER
-        System.out.println("\n=== DANG CHAY SECRET SCANNER ===");
+        System.out.println("\n=== ĐANG CHẠY SECRET SCANNER ===");
 
         SecretScanner.scanFile("src/Main.java");
     }

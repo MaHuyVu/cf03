@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,68 +16,57 @@ public class SecretScannerGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout(10, 10));
+        JPanel panel = new JPanel(new BorderLayout());
 
-        // Ô nhập dữ liệu
         inputArea = new JTextArea();
-        inputArea.setFont(new Font("Arial", Font.PLAIN, 16));
+        inputArea.setFont(new Font("Arial", Font.PLAIN, 15));
         inputArea.setBorder(
                 BorderFactory.createTitledBorder("Nhập source code hoặc API Key")
         );
 
-        // Ô kết quả
         resultArea = new JTextArea();
         resultArea.setEditable(false);
-        resultArea.setFont(new Font("Arial", Font.BOLD, 16));
+        resultArea.setFont(new Font("Arial", Font.BOLD, 15));
         resultArea.setForeground(Color.RED);
         resultArea.setBorder(
                 BorderFactory.createTitledBorder("Kết quả quét")
         );
 
-        // Nút quét
         scanButton = new JButton("Quét Secret Key");
-        scanButton.setFont(new Font("Arial", Font.BOLD, 16));
 
-        scanButton.addActionListener(new ActionListener() {
+        scanButton.addActionListener(e -> {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
+            String content = inputArea.getText();
 
-                String content = inputArea.getText();
+            Pattern pattern = Pattern.compile("sk_[A-Za-z0-9_]+");
 
-                // Regex tìm secret key
-                Pattern pattern = Pattern.compile("sk_[A-Za-z0-9_]+");
+            Matcher matcher = pattern.matcher(content);
 
-                Matcher matcher = pattern.matcher(content);
+            StringBuilder result = new StringBuilder();
 
-                boolean found = false;
+            boolean found = false;
 
-                StringBuilder result = new StringBuilder();
-
-                while (matcher.find()) {
-
-                    if (!found) {
-
-                        result.append("[CẢNH BÁO] Phát hiện Secret Key!\n\n");
-                        found = true;
-                    }
-
-                    result.append("Key tìm thấy: ")
-                            .append(matcher.group())
-                            .append("\n");
-                }
+            while (matcher.find()) {
 
                 if (!found) {
 
-                    result.append("Không phát hiện secret.");
+                    result.append("[CẢNH BÁO] Phát hiện Secret Key!\n\n");
+                    found = true;
                 }
 
-                resultArea.setText(result.toString());
+                result.append("Key tìm thấy: ")
+                        .append(matcher.group())
+                        .append("\n");
             }
+
+            if (!found) {
+
+                result.append("Không phát hiện Secret Key.");
+            }
+
+            resultArea.setText(result.toString());
         });
 
-        // Chia giao diện trên/dưới
         JSplitPane splitPane = new JSplitPane(
                 JSplitPane.VERTICAL_SPLIT,
                 new JScrollPane(inputArea),
@@ -96,13 +83,8 @@ public class SecretScannerGUI extends JFrame {
 
     public static void main(String[] args) {
 
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-
-                new SecretScannerGUI().setVisible(true);
-            }
-        });
+        SwingUtilities.invokeLater(() ->
+                new SecretScannerGUI().setVisible(true)
+        );
     }
 }

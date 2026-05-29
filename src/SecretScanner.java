@@ -44,7 +44,7 @@ public class SecretScanner {
 
         if (!found) {
 
-            System.out.println("\nKhông phát hiện secret.");
+            System.out.println("\nKhông phát hiện Secret Key.");
         }
     }
 }
